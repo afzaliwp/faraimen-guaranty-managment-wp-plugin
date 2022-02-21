@@ -1,0 +1,15 @@
+#fi-admin .metabox-holder {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+#fi-admin .metabox-holder .postbox {
+    width: 50%;
+    margin: 10px;
+}
+
+#fi-admin .metabox-holder .postbox form textarea {
+    width: 100%;
+}
+
