@@ -33,6 +33,7 @@ function fi_add_menu_page() {
 add_action( 'admin_menu', 'fi_add_menu_page' );
 
 function fi_admin_menu_main() {
+	include 'jdf.php';
 	include FI_TPL . 'admin/main.php';
 }
 
@@ -49,5 +50,6 @@ function fi_admin_menu_add_code() {
 }
 
 function fi_admin_menu_requests() {
+	include 'jdf.php';
 	include FI_TPL . 'admin/requests.php';
 }

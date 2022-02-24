@@ -1,5 +1,4 @@
-<?php var_dump(get_current_screen()); ?>
-<p>تعداد کل درخواست ها: 110</p>
+<p>تعداد کل درخواست ها: <?php echo number_format($codes['all']); ?></p>
 <table class="wp-list-table widefat fixed striped table-view-list pages">
     <thead>
     <tr>
@@ -29,6 +28,11 @@
 
         <!-- Head cell -->
         <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
+            <a href="#"><span>تاریخ شروع گارانتی</span></a>
+        </th>
+
+        <!-- Head cell -->
+        <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
             <a href="#"><span>تاریخ اتمام گارانتی</span></a>
         </th>
 
@@ -41,18 +45,21 @@
     </thead>
 
     <tbody id="the-list">
-    <tr id="" class="iedit author-self level-0 post-12 type-page status-publish hentry">
-        <th scope="row" class="check-column">
-            <label class="screen-reader-text" for="########">انتخاب درخواست</label>
-            <input id="########" type="checkbox" name="guaranty_request[]" value="#########">
-        </th>
-        <td class="column">نام</td>
-        <td class="column">شماره</td>
-        <td class="column">کد</td>
-        <td class="column">تاریخ</td>
-        <td class="column">اتمام</td>
-        <td class="column">توضیحات</td>
-    </tr>
+	<?php foreach ($codes['codes'] as $code): ?>
+        <tr id="" class="iedit author-self level-0 post-12 type-page status-publish hentry">
+            <th scope="row" class="check-column">
+                <label class="screen-reader-text" for="code-<?php echo $code->ID; ?>">انتخاب کد</label>
+                <input id="code-<?php echo $code->ID; ?>" type="checkbox" name="guaranty_request[]" value="<?php echo $code->ID; ?>">
+            </th>
+            <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
+            <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
+            <td class="column"><?php echo $code->code; ?></td>
+            <td class="column"><?php echo $code->created_at; ?></td>
+            <td class="column"><?php echo $code->started_at; ?></td>
+            <td class="column"><?php echo $code->ended_at; ?></td>
+            <td class="column"><?php echo $code->request; ?></td>
+        </tr>
+	<?php endforeach; ?>
 
     </tbody>
 
@@ -84,6 +91,11 @@
 
         <!-- Head cell -->
         <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
+            <a href="#"><span>تاریخ شروع گارانتی</span></a>
+        </th>
+
+        <!-- Head cell -->
+        <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
             <a href="#"><span>تاریخ اتمام گارانتی</span></a>
         </th>
 
@@ -107,26 +119,10 @@
     </div>
     <div class="alignleft actions">
     </div>
-    <div class="tablenav-pages"><span class="displaying-num">20 مورد</span>
-        <span class="pagination-links">
-            <?php $page_url = get_admin_url() . get_current_screen()->base; ?>
-            <a class="previous-page button" href="<?php echo esc_url(add_query_arg(['paged' => '2'])) ?>">
-                <span aria-hidden="true">‹</span>
-            </a>
-            <span class="screen-reader-text">صفحه فعلی</span>
-            <span id="table-paging" class="paging-input">
-                <span class="tablenav-paging-text">
-                    <span>
-                        1 از
-                    </span>
 
-                    <span class="total-pages"> کل صفحه ها</span>
-                </span>
-            </span>
-
-<a class="next-page button" href="http://dev.wp/wp-admin/edit.php?post_type=page&amp;mode=list&amp;paged=2"><span
-            class="screen-reader-text">Next page</span><span aria-hidden="true">›</span></a>
-        </span>
-    </div>
+    <?php
+    $pagination = $codes['pagination'];
+    include "pagination.php";
+    ?>
     <br class="clear">
 </div>

@@ -1,5 +1,6 @@
 <?php
 
+add_action( 'admin_enqueue_scripts', 'fi_load_assets' );
 function fi_load_assets() {
 	$current_screen = get_current_screen();
 
@@ -9,8 +10,6 @@ function fi_load_assets() {
 	}
 }
 
-add_action( 'admin_enqueue_scripts', 'fi_load_assets' );
-
 
 function fi_add_codes_from_admin( $codes, $type ) {
 	global $wpdb;
@@ -18,24 +17,88 @@ function fi_add_codes_from_admin( $codes, $type ) {
 	$exploded_codes = array_filter( explode( PHP_EOL, $codes ) );
 	$unique_codes   = array_unique( $exploded_codes );
 
-	$codes_count = count($unique_codes);
-	$last_code = $unique_codes[$codes_count - 1];
+	$codes_count = count( $unique_codes );
+	$last_code   = $unique_codes[ $codes_count - 1 ];
 
 	$base_query  = 'INSERT INTO ' . $tp . 'fi_guaranty (code, type) VALUES';
 	$value_query = '';
 
 	foreach ( $unique_codes as $index => $code ) {
 		$value_query .= ' (' . $code . ', ' . $type . ')';
-		if ($index != array_key_last($unique_codes)){
+		if ( $index != array_key_last( $unique_codes ) ) {
 			$value_query .= ', ';
 		}
 	}
 	$query = $base_query . $value_query;
 
-	$result = $wpdb->query( $query);
+	$result = $wpdb->query( $query );
 
-	if ($result){
-		return ['type' => 'success', 'message' => 'کد ها با موفقیت اضافه شدند.'];
+	if ( $result ) {
+		return [ 'type' => 'success', 'message' => 'کد ها با موفقیت اضافه شدند.' ];
 	}
-	return ['type' => 'error', 'message' => 'خطایی پیش آمده است. لطفا ورودی ها را چک کنید و مجددا اقدام کنید.'];
+
+	return [ 'type' => 'error', 'message' => 'خطایی پیش آمده است. لطفا ورودی ها را چک کنید و مجددا اقدام کنید.' ];
 }
+
+function fi_get_codes() {
+	$page   = $_GET['codes-page'] ?: 1;
+	$count  = 50;
+	$offset = $count * ( $page - 1 );
+
+	global $wpdb;
+	$tp              = $wpdb->prefix;
+	$all_codes_count = $wpdb->get_var( "SELECT COUNT(ID) FROM {$tp}fi_guaranty" );
+	$page_count      = ceil( $all_codes_count / $count );
+	$results         = $wpdb->get_results( "SELECT * FROM {$tp}fi_guaranty ORDER BY `ID` DESC LIMIT {$offset}, {$count}" );
+
+	return [
+		'all'        => $all_codes_count,
+		'codes'      => $results,
+		'pagination' => [ 'pages' => $page_count, 'current' => $page ]
+	];
+}
+
+function fi_delete_codes($code_ids){
+
+	if (empty($code_ids)){
+		return false;
+	}
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	$ids = '';
+	foreach ($code_ids as $index => $id){
+		$ids .= $id;
+		if ($index+1 != count($code_ids) ){
+			$ids .= ', ';
+		}
+	}
+
+	return $wpdb->query("DELETE FROM {$tp}fi_guaranty WHERE ID IN ({$ids});");
+}
+
+
+function fi_get_requests() {
+	$page   = $_GET['codes-page'] ?: 1;
+	$count  = 50;
+	$offset = $count * ( $page - 1 );
+
+	global $wpdb;
+	$tp              = $wpdb->prefix;
+	$all_codes_count = $wpdb->get_var( "SELECT COUNT(ID) FROM {$tp}fi_guaranty WHERE `request` != null" );
+	$page_count      = ceil( $all_codes_count / $count );
+	$results         = $wpdb->get_results( "SELECT * FROM {$tp}fi_guaranty WHERE `request` != null ORDER BY `started_at` DESC LIMIT {$offset}, {$count}" );
+
+	return [
+		'all'        => $all_codes_count,
+		'codes'      => $results,
+		'pagination' => [ 'pages' => $page_count, 'current' => $page ]
+	];
+}
+
+function fi_gregorian_to_jalali( $date, $separator = '-' ) {
+	$separated_date = explode( $separator, $date );
+
+	return gregorian_to_jalali( $separated_date[0], $separated_date[1], $separated_date[2], $separator );
+}
+
