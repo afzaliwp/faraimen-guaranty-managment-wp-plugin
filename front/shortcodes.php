@@ -3,6 +3,9 @@ add_action( 'init', 'fi_add_form_shortcodes' );
 
 function fi_add_form_shortcodes() {
 	add_shortcode( 'fi_public_form', 'fi_public_form' );
+	add_shortcode( 'fi_inquiry_form', 'fi_inquiry_form' );
+	//add_shortcode( 'fi_public_form', 'fi_public_form' );
+	//add_shortcode( 'fi_public_form', 'fi_public_form' );
 }
 
 function fi_public_form(){
@@ -10,4 +13,11 @@ function fi_public_form(){
 		$result = fi_save_public_form_data($_POST);
 	}
 	include FI_TPL . "front/public_form.php";
+}
+
+function fi_inquiry_form(){
+	if (isset($_POST['inquiry_send_code'])){
+		$result = fi_get_inquiry_result($_POST['guaranty_code']);
+	}
+	include FI_TPL . "front/inquiry_form.php";
 }

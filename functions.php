@@ -98,6 +98,7 @@ function fi_get_requests() {
 }
 
 function fi_gregorian_to_jalali( $date, $separator = '-' ) {
+	include_once FI_ADMIN . 'jdf.php';
 	$separated_date = explode( $separator, $date );
 
 	return gregorian_to_jalali( $separated_date[0], $separated_date[1], $separated_date[2], $separator );
@@ -119,3 +120,9 @@ function fi_save_public_form_data( $data ) {
 	);
 }
 
+function fi_get_inquiry_result($code){
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	return $wpdb->get_row("SELECT * FROM {$tp}fi_guaranty WHERE code='{$code}' LIMIT 1");
+}

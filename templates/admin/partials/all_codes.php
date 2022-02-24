@@ -89,38 +89,38 @@
                 <label class="screen-reader-text" for="cb-select-all-1">انتخاب همه</label>
                 <input id="cb-select-all-1" type="checkbox">
             </td>
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>کد گارانتی</span></a>
             </th>
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>تاریخ ثبت</span></a>
             </th>
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <span>نام و نام خانوادگی</span>
             </th>
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>شماره تماس</span></a>
             </th>
 
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>تاریخ شروع گارانتی</span></a>
             </th>
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>تاریخ اتمام گارانتی</span></a>
             </th>
 
-            <!-- Head cell -->
+            <!-- Foot cell -->
             <th scope="col" id="" class="manage-column column-title column-primary sortable desc">
                 <a href="#"><span>توضیحات</span></a>
             </th>
