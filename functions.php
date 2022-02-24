@@ -1,15 +1,18 @@
 <?php
-
-add_action( 'admin_enqueue_scripts', 'fi_load_assets' );
-function fi_load_assets() {
+add_action( 'admin_enqueue_scripts', 'fi_load_admin_assets' );
+function fi_load_admin_assets() {
 	$current_screen = get_current_screen();
-
 	if ( str_contains( $current_screen->base, 'fi-guaranty' ) ) {
 		wp_register_style( 'fi-admin', FI_CSS . 'fi-admin.css', '', '1.0.0' );
 		wp_enqueue_style( 'fi-admin' );
 	}
 }
 
+add_action( 'wp_enqueue_scripts', 'fi_load_front_assets' );
+function fi_load_front_assets() {
+	wp_register_style( 'fi-front', FI_CSS . 'fi-front.css', '', '1.0.0' );
+	wp_enqueue_style( 'fi-front' );
+}
 
 function fi_add_codes_from_admin( $codes, $type ) {
 	global $wpdb;
@@ -18,7 +21,6 @@ function fi_add_codes_from_admin( $codes, $type ) {
 	$unique_codes   = array_unique( $exploded_codes );
 
 	$codes_count = count( $unique_codes );
-	$last_code   = $unique_codes[ $codes_count - 1 ];
 
 	$base_query  = 'INSERT INTO ' . $tp . 'fi_guaranty (code, type) VALUES';
 	$value_query = '';
@@ -58,25 +60,24 @@ function fi_get_codes() {
 	];
 }
 
-function fi_delete_codes($code_ids){
+function fi_delete_codes( $code_ids ) {
 
-	if (empty($code_ids)){
+	if ( empty( $code_ids ) ) {
 		return false;
 	}
 	global $wpdb;
 	$tp = $wpdb->prefix;
 
 	$ids = '';
-	foreach ($code_ids as $index => $id){
+	foreach ( $code_ids as $index => $id ) {
 		$ids .= $id;
-		if ($index+1 != count($code_ids) ){
+		if ( $index != array_key_last( $code_ids ) ) {
 			$ids .= ', ';
 		}
 	}
 
-	return $wpdb->query("DELETE FROM {$tp}fi_guaranty WHERE ID IN ({$ids});");
+	return $wpdb->query( "DELETE FROM {$tp}fi_guaranty WHERE ID IN ({$ids});" );
 }
-
 
 function fi_get_requests() {
 	$page   = $_GET['codes-page'] ?: 1;
@@ -100,5 +101,21 @@ function fi_gregorian_to_jalali( $date, $separator = '-' ) {
 	$separated_date = explode( $separator, $date );
 
 	return gregorian_to_jalali( $separated_date[0], $separated_date[1], $separated_date[2], $separator );
+}
+
+function fi_save_public_form_data( $data ) {
+	$code     = $data['guaranty_code'];
+	$name     = $data['customer_name'];
+	$phone    = $data['customer_phone'];
+	$customer = [ 'name' => $name, 'phone' => $phone ];
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	return $wpdb->update( $tp . 'fi_guaranty',
+		[ 'customer' =>  maybe_serialize($customer)],
+		[ 'type' => INSTALLER, 'code' => $code ],
+		[ '%s' ],
+		[ '%d', '%s' ]
+	);
 }
 

@@ -1,8 +1,4 @@
-<?php $pagination = $codes['pagination'];
-if (isset($_POST['delete_codes'])){
-    var_dump($_POST['guaranty_request']);
-}
-?>
+<?php $pagination = $codes['pagination']; ?>
 <div class="tablenav top">
     <div class="alignleft actions">
         <p>تعداد کل درخواست ها: <?php echo number_format( $codes['all'] ); ?></p>
@@ -65,7 +61,10 @@ if (isset($_POST['delete_codes'])){
         </thead>
 
         <tbody id="the-list">
-		<?php foreach ( $codes['codes'] as $code ): ?>
+		<?php foreach ( $codes['codes'] as $code ):
+            $customer = maybe_unserialize($code->customer);
+            $installer = maybe_unserialize($code->installer);
+            ?>
             <tr id="" class="iedit author-self level-0 post-12 type-page status-publish hentry">
                 <th scope="row" class="check-column">
                     <label class="screen-reader-text" for="code-<?php echo $code->ID; ?>">انتخاب کد</label>
@@ -74,8 +73,8 @@ if (isset($_POST['delete_codes'])){
                 </th>
                 <td class="column"><?php echo $code->code; ?></td>
                 <td class="column"><?php echo fi_gregorian_to_jalali( $code->created_at ); ?></td>
-                <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
-                <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
+                <td class="column"><?php echo $installer['name'] ?: $customer['name']; ?></td>
+                <td class="column"><?php echo $installer['phone'] ?: $customer['phone']; ?></td>
                 <td class="column"><?php echo $code->started_at; ?></td>
                 <td class="column"><?php echo $code->ended_at; ?></td>
                 <td class="column"><?php echo $code->request; ?></td>

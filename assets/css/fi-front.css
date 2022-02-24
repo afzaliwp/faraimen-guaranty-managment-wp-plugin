@@ -1,0 +1,27 @@
+.fi-form .fi-field{
+    display: flex;
+    flex-direction: column;
+}
+
+.fi-form .fi-field input{
+    margin-bottom: 15px;
+}
+.fi-form .fi-field label{
+    margin-bottom: 5px;
+}
+
+.fi-message{
+    padding: 5px;
+    border-radius: 4px;
+    color: #212121;
+}
+
+.fi-message.error{
+    background: #ffe6e6;
+}
+.fi-message.success{
+    background: #e7ffe6;
+}
+.fi-message p{
+    margin-bottom: 0;
+}

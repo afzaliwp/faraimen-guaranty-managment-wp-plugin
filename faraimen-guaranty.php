@@ -37,5 +37,5 @@ require_once FI_DIR . "functions.php";
 if ( is_admin() ) {
 	require_once FI_ADMIN . "admin_menu.php";
 } else {
-	
+	require_once FI_FRONT . "shortcodes.php";
 }
