@@ -88,7 +88,11 @@ function fi_get_requests() {
 	$tp              = $wpdb->prefix;
 	$all_codes_count = $wpdb->get_var( "SELECT COUNT(ID) FROM {$tp}fi_guaranty WHERE `request` != null" );
 	$page_count      = ceil( $all_codes_count / $count );
-	$results         = $wpdb->get_results( "SELECT * FROM {$tp}fi_guaranty WHERE `request` != null ORDER BY `started_at` DESC LIMIT {$offset}, {$count}" );
+	$results         = $wpdb->get_results( "SELECT *
+													FROM {$tp}fi_guaranty 
+													WHERE `request` IS NOT null 
+													ORDER BY `started_at` 
+													DESC LIMIT {$offset}, {$count}" );
 
 	return [
 		'all'        => $all_codes_count,
@@ -113,34 +117,71 @@ function fi_save_public_form_data( $data ) {
 	$tp = $wpdb->prefix;
 
 	return $wpdb->update( $tp . 'fi_guaranty',
-		[ 'customer' =>  maybe_serialize($customer)],
+		[ 'customer' => maybe_serialize( $customer ) ],
 		[ 'type' => INSTALLER, 'code' => $code ],
 		[ '%s' ],
 		[ '%d', '%s' ]
 	);
 }
 
-function fi_get_inquiry_result($code){
+function fi_get_inquiry_result( $code ) {
 	global $wpdb;
 	$tp = $wpdb->prefix;
 
-	return $wpdb->get_row("SELECT * FROM {$tp}fi_guaranty WHERE code='{$code}' LIMIT 1");
+	return $wpdb->get_row( "SELECT * FROM {$tp}fi_guaranty WHERE code='{$code}' LIMIT 1" );
 }
 
 function fi_save_installer_form_data( $code ) {
-	$user = wp_get_current_user();
-	$name     = $user->display_name;
-	$user_id = $user->ID;
-	$phone    = get_user_meta( get_current_user_id(), 'billing_phone', true );
+	$user      = wp_get_current_user();
+	$name      = $user->display_name;
+	$user_id   = $user->ID;
+	$phone     = get_user_meta( get_current_user_id(), 'billing_phone', true );
 	$installer = [ 'id' => $user_id, 'name' => $name, 'phone' => $phone ];
 
 	global $wpdb;
 	$tp = $wpdb->prefix;
 
 	return $wpdb->update( $tp . 'fi_guaranty',
-		[ 'installer' =>  maybe_serialize($installer)],
+		[ 'installer' => maybe_serialize( $installer ) ],
 		[ 'type' => INSTALLER, 'code' => $code ],
 		[ '%s' ],
 		[ '%d', '%s' ]
 	);
+}
+
+function fi_save_guaranty_request( $data ) {
+	$code      = $data['guaranty_code'];
+	$user      = wp_get_current_user();
+	$name      = $user->display_name;
+	$user_id   = $user->ID;
+	$phone     = get_user_meta( get_current_user_id(), 'billing_phone', true );
+	$installer = [ 'id' => $user_id, 'name' => $name, 'phone' => $phone ];
+
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	return $wpdb->update( $tp . 'fi_guaranty',
+		[
+			'installer'  => maybe_serialize( $installer ),
+			'request'    => $data['explanation'],
+			'started_at' => wp_date( 'Y-m-d H:i:s' ),
+			'ended_at'   => wp_date( 'Y-m-d H:i:s', strtotime( '+2 years' ) )
+		],
+		[ 'type' => INSTALLER, 'code' => $code, ],
+		[ '%s', '%s', '%s', '%s' ],
+		[ '%d', '%s' ]
+	);
+}
+
+function fi_count_new_requests(){
+	$guaranty_requests_count = get_option( 'fi_new_guaranty_requests_count', true );
+	update_option( 'fi_new_guaranty_requests_count', $guaranty_requests_count+1);
+}
+
+add_action('admin_enqueue_scripts', 'fi_empty_new_requests');
+function fi_empty_new_requests(){
+	$current_screen = get_current_screen();
+	if ( str_contains( $current_screen->base, 'fi-guaranty-requests' ) ) {
+		update_option( 'fi_new_guaranty_requests_count', 0);
+	}
 }

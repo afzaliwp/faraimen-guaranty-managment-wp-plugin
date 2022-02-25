@@ -3,7 +3,7 @@
     flex-direction: column;
 }
 
-.fi-form .fi-field input{
+.fi-form .fi-field input, .fi-form .fi-field textarea{
     margin-bottom: 15px;
 }
 .fi-form .fi-field label{

@@ -44,24 +44,7 @@
     </tr>
     </thead>
 
-    <tbody id="the-list">
-	<?php foreach ($codes['codes'] as $code): ?>
-        <tr id="" class="iedit author-self level-0 post-12 type-page status-publish hentry">
-            <th scope="row" class="check-column">
-                <label class="screen-reader-text" for="code-<?php echo $code->ID; ?>">انتخاب کد</label>
-                <input id="code-<?php echo $code->ID; ?>" type="checkbox" name="guaranty_request[]" value="<?php echo $code->ID; ?>">
-            </th>
-            <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
-            <td class="column"><?php echo $code->installer ?: $code->customer; ?></td>
-            <td class="column"><?php echo $code->code; ?></td>
-            <td class="column"><?php echo $code->created_at; ?></td>
-            <td class="column"><?php echo $code->started_at; ?></td>
-            <td class="column"><?php echo $code->ended_at; ?></td>
-            <td class="column"><?php echo $code->request; ?></td>
-        </tr>
-	<?php endforeach; ?>
-
-    </tbody>
+    <?php include "table_body.php"; ?>
 
     <tfoot>
     <tr>
