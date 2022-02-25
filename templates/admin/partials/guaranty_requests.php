@@ -113,9 +113,7 @@
 <div class="tablenav bottom">
     <div class="alignleft actions bulkactions">
         <input type="submit" id="delete_requests" class="button action" value="حذف درخواست های انتخاب شده">
-        <p>با حذف درخواست، درخواست گارانتی مشتری حذف میشود و تاریخ انقضای گارانتی نیز حذف میشود.</p>
-        <p>درصورتی که درخواست گارانتی کاربر مورد تایید نبود، اما همچنان امکان درخواست استفاده از گارانتی را به کاربر می
-            دهید، از گزینه حذف استفاده کنید.</p>
+        <p>با حذف درخواست، کد و تاریخ انقضای گارانتی نیز حذف میشود.</p>
     </div>
     <div class="alignleft actions">
     </div>

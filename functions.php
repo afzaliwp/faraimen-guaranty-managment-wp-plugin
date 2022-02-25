@@ -126,3 +126,21 @@ function fi_get_inquiry_result($code){
 
 	return $wpdb->get_row("SELECT * FROM {$tp}fi_guaranty WHERE code='{$code}' LIMIT 1");
 }
+
+function fi_save_installer_form_data( $code ) {
+	$user = wp_get_current_user();
+	$name     = $user->display_name;
+	$user_id = $user->ID;
+	$phone    = get_user_meta( get_current_user_id(), 'billing_phone', true );
+	$installer = [ 'id' => $user_id, 'name' => $name, 'phone' => $phone ];
+
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	return $wpdb->update( $tp . 'fi_guaranty',
+		[ 'installer' =>  maybe_serialize($installer)],
+		[ 'type' => INSTALLER, 'code' => $code ],
+		[ '%s' ],
+		[ '%d', '%s' ]
+	);
+}

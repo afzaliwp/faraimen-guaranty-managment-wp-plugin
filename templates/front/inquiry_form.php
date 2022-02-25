@@ -1,5 +1,5 @@
 <?php include "partials/inquiry_result.php"; ?>
-<form action="" method="post" id="public_form" class="fi-form public">
+<form action="" method="post" id="inquiry_form" class="fi-form inquiry">
 	<div class="fi-field guaranty_code">
 		<label for="guaranty_code">کد قرعه کشی</label>
 		<input required type="number" name="guaranty_code" id="guaranty_code" placeholder="12345678901">

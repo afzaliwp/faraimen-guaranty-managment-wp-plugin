@@ -6,13 +6,14 @@
 	<?php include "pagination.php"; ?>
 </div>
 
-<div class="">
+<div class="messages">
 	<?php if (isset($message)): ?>
         <div class="notice notice-<?php echo $message['type']; ?> is-dismissible">
             <p><?php echo $message['message']; ?></p>
         </div>
 	<?php endif; ?>
 </div>
+
 <form action="" method="post">
     <table class="wp-list-table widefat fixed striped table-view-list pages">
         <thead>
@@ -133,9 +134,7 @@
     <div class="tablenav bottom">
         <div class="alignleft actions bulkactions">
             <input type="submit" id="delete_codes" name="delete_codes" class="button action" value="حذف درخواست های انتخاب شده">
-            <p>با حذف درخواست، درخواست گارانتی مشتری حذف میشود و تاریخ انقضای گارانتی نیز حذف میشود.</p>
-            <p>درصورتی که درخواست گارانتی کاربر مورد تایید نبود، اما همچنان امکان درخواست استفاده از گارانتی را به کاربر می
-                دهید، از گزینه حذف استفاده کنید.</p>
+            <p>با حذف درخواست، کد و تاریخ انقضای گارانتی نیز حذف میشود.</p>
         </div>
         <div class="alignleft actions">
         </div>
