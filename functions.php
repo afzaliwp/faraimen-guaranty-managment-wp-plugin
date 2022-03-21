@@ -36,7 +36,7 @@ function fi_add_codes_from_admin( $codes, $type ) {
 	$result = $wpdb->query( $query );
 
 	if ( $result ) {
-		return [ 'type' => 'success', 'message' => 'کد ها با موفقیت اضافه شدند.' ];
+		return [ 'type' => 'success', 'message' => 'کد ها با موفقیت اضافه شدند. ' . $codes_count ];
 	}
 
 	return [ 'type' => 'error', 'message' => 'خطایی پیش آمده است. لطفا ورودی ها را چک کنید و مجددا اقدام کنید.' ];
@@ -58,6 +58,13 @@ function fi_get_codes() {
 		'codes'      => $results,
 		'pagination' => [ 'pages' => $page_count, 'current' => $page ]
 	];
+}
+
+function fi_get_code( $code ) {
+	global $wpdb;
+	$tp = $wpdb->prefix;
+
+	return $wpdb->get_row( "SELECT * FROM {$tp}fi_guaranty WHERE `code` = {$code}" );
 }
 
 function fi_delete_codes( $code_ids ) {
@@ -109,8 +116,18 @@ function fi_gregorian_to_jalali( $date, $separator = '-' ) {
 }
 
 function fi_save_public_form_data( $data ) {
-	$code     = $data['guaranty_code'];
-	$name     = $data['customer_name'];
+	$code = $data['guaranty_code'];
+	$code_exists = fi_get_code( $code );
+
+	if (!$code_exists ){
+		return false;
+	}
+
+	if ( !empty( $code_exists->customer ) || !empty( $code_exists->installer ) ) {
+		return false;
+	}
+
+	$name = $data['customer_name'];
 	$phone    = $data['customer_phone'];
 	$customer = [ 'name' => $name, 'phone' => $phone ];
 	global $wpdb;
@@ -118,7 +135,7 @@ function fi_save_public_form_data( $data ) {
 
 	return $wpdb->update( $tp . 'fi_guaranty',
 		[ 'customer' => maybe_serialize( $customer ) ],
-		[ 'type' => INSTALLER, 'code' => $code ],
+		[ 'type' => CUSTOMER, 'code' => $code ],
 		[ '%s' ],
 		[ '%d', '%s' ]
 	);
@@ -132,6 +149,16 @@ function fi_get_inquiry_result( $code ) {
 }
 
 function fi_save_installer_form_data( $code ) {
+	$code_exists = fi_get_code( $code );
+
+	if (!$code_exists ){
+		return false;
+	}
+
+	if ( !empty( $code_exists->customer ) || !empty( $code_exists->installer ) ) {
+		return false;
+	}
+
 	$user      = wp_get_current_user();
 	$name      = $user->display_name;
 	$user_id   = $user->ID;
@@ -173,15 +200,15 @@ function fi_save_guaranty_request( $data ) {
 	);
 }
 
-function fi_count_new_requests(){
+function fi_count_new_requests() {
 	$guaranty_requests_count = get_option( 'fi_new_guaranty_requests_count', true );
-	update_option( 'fi_new_guaranty_requests_count', $guaranty_requests_count+1);
+	update_option( 'fi_new_guaranty_requests_count', $guaranty_requests_count + 1 );
 }
 
-add_action('admin_enqueue_scripts', 'fi_empty_new_requests');
-function fi_empty_new_requests(){
+add_action( 'admin_enqueue_scripts', 'fi_empty_new_requests' );
+function fi_empty_new_requests() {
 	$current_screen = get_current_screen();
 	if ( str_contains( $current_screen->base, 'fi-guaranty-requests' ) ) {
-		update_option( 'fi_new_guaranty_requests_count', 0);
+		update_option( 'fi_new_guaranty_requests_count', 0 );
 	}
 }
