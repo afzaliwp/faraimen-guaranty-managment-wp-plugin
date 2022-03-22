@@ -244,12 +244,13 @@ function fi_get_installer_code_count($user_id){
 	$all_installers = $wpdb->get_results("SELECT * FROM {$tp}fi_guaranty WHERE `installer` IS NOT NULL");
 
 	$installer_codes_count = 0;
+	
 	foreach ($all_installers as $installer){
 		if (maybe_unserialize($installer->installer)['id'] == $user_id){
 			$installer_codes_count += 1;
 		}
 	}
-	var_dump($installer_codes_count);
+
 	return $installer_codes_count;
 }
 fi_get_installer_code_count(1);
