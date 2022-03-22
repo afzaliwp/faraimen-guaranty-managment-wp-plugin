@@ -21,7 +21,7 @@ define( 'FI_CSS', trailingslashit( FI_URL . 'assets/css' ) );
 
 global $table_prefix;
 define( 'FI_TABLE', $table_prefix . 'fi_guaranty' );
-const FI_DB_VER = 1;
+const FI_DB_VER = 1.1;
 
 //code types to save in db
 const INSTALLER = 1;

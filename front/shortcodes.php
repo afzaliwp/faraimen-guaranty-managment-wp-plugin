@@ -6,6 +6,7 @@ function fi_add_form_shortcodes() {
 	add_shortcode( 'fi_inquiry_form', 'fi_inquiry_form' );
 	add_shortcode( 'fi_installer_form', 'fi_installer_form' );
 	add_shortcode( 'fi_guaranty_form', 'fi_guaranty_form' );
+	add_shortcode( 'fi_installer_code_count', 'fi_installer_codes_count' );
 }
 
 function fi_public_form(){
@@ -37,4 +38,8 @@ function fi_guaranty_form(){
 		fi_count_new_requests();
 	}
 	include FI_TPL . "front/guaranty_form.php";
+}
+
+function fi_installer_codes_count() {
+	return fi_get_installer_code_count(get_current_user_id());
 }
