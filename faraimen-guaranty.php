@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: FaraImen Guaranty
- * Version:     1.1.0
+ * Version:     1.2.0
  * Author:      AfzaliWP (Mohammad Afzali)
  * Author URI:  https://afzaliwp.com
  * Description: This plugin developed for FaraImen Company in order to manage their guaranty codes.
@@ -21,7 +21,7 @@ define( 'FI_CSS', trailingslashit( FI_URL . 'assets/css' ) );
 
 global $table_prefix;
 define( 'FI_TABLE', $table_prefix . 'fi_guaranty' );
-const FI_DB_VER = 1.1;
+const FI_DB_VER = 1.2;
 
 //code types to save in db
 const INSTALLER = 1;
